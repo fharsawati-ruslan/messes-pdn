@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Mess-KSO | Login</title>
+
+  @vite(['resources/css/app.css'])
+</head>
+
+<body>
+
+<main class="login-page">
+
+  <div class="login-wrapper">
+
+    <!-- =====================================================
+         LEFT / VISUAL
+         ===================================================== -->
+    <section class="login-visual">
+
+      <div class="visual-overlay"></div>
+
+      <div class="visual-caption">
+
+        <div class="visual-title">
+          MESS-KSO
+        </div>
+
+        <div class="visual-subtitle">
+          Sistem Pencatatan Mess
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         RIGHT / LOGIN
+         ===================================================== -->
+    <section class="login-panel">
+
+      <div class="login-content">
+
+        <!-- =================================================
+             BRAND
+             ================================================= -->
+        <div class="brand">
+
+          <div class="brand-mark">
+            <span>MESS</span>
+            <strong>KSO</strong>
+          </div>
+
+          <div class="brand-text">
+
+            <h1>
+              Mess-KSO
+            </h1>
+
+            <p>
+              Sistem Pencatatan Mess
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="login-divider"></div>
+
+
+        <!-- =================================================
+             WELCOME
+             ================================================= -->
+        <div class="welcome">
+
+          <h2>
+            Selamat Datang!
+          </h2>
+
+          <p>
+            Silakan masuk untuk melanjutkan
+          </p>
+
+        </div>
+
+
+        <!-- =================================================
+             LOGIN ERROR
+             ================================================= -->
+        @if(flashMessages.has('errors.email'))
+
+          <div class="login-error">
+            {{ flashMessages.get('errors.email') }}
+          </div>
+
+        @end
+
+
+        <!-- =================================================
+             LOGIN FORM
+             ================================================= -->
+        <form
+          class="login-form"
+          method="POST"
+          action="/login"
+        >
+
+          {{-- IMPORTANT: CSRF TOKEN --}}
+
+          {{ csrfField() }}
+
+
+          <!-- =================================================
+               EMAIL
+               ================================================= -->
+          <div class="form-group">
+
+            <span class="input-icon">
+
+              <svg
+                width="21"
+                height="21"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+
+                <path
+                  d="M20 21a8 8 0 0 0-16 0"
+                />
+
+                <circle
+                  cx="12"
+                  cy="7"
+                  r="4"
+                />
+
+              </svg>
+
+            </span>
+
+
+            <input
+              class="form-input"
+              type="email"
+              name="email"
+              placeholder="Username atau Email"
+              autocomplete="username"
+              required
+            >
+
+          </div>
+
+
+          <!-- =================================================
+               PASSWORD
+               ================================================= -->
+          <div class="form-group password-group">
+
+            <span class="input-icon">
+
+              <svg
+                width="21"
+                height="21"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+
+                <rect
+                  x="3"
+                  y="11"
+                  width="18"
+                  height="10"
+                  rx="2"
+                />
+
+                <path
+                  d="M7 11V7a5 5 0 0 1 10 0v4"
+                />
+
+              </svg>
+
+            </span>
+
+
+            <input
+              id="password"
+              class="form-input"
+              type="password"
+              name="password"
+              placeholder="Password"
+              autocomplete="current-password"
+              required
+            >
+
+
+            <!-- PASSWORD TOGGLE -->
+
+            <button
+              type="button"
+              class="password-toggle"
+              id="passwordToggle"
+              aria-label="Tampilkan password"
+            >
+
+              <svg
+                id="eyeIcon"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+
+                <path
+                  d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"
+                />
+
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="3"
+                />
+
+              </svg>
+
+            </button>
+
+          </div>
+
+
+          <!-- =================================================
+               OPTIONS
+               ================================================= -->
+          <div class="login-options">
+
+            <label class="remember">
+
+              <input
+                type="checkbox"
+                name="remember"
+                value="1"
+              >
+
+              <span>
+                Ingat saya
+              </span>
+
+            </label>
+
+
+            <a
+              href="#"
+              onclick="return false;"
+            >
+              Lupa password?
+            </a>
+
+          </div>
+
+
+          <!-- =================================================
+               LOGIN BUTTON
+               ================================================= -->
+          <button
+            type="submit"
+            class="login-button"
+            id="loginButton"
+          >
+
+            <svg
+              width="19"
+              height="19"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+
+              <rect
+                x="3"
+                y="11"
+                width="18"
+                height="10"
+                rx="2"
+              />
+
+              <path
+                d="M7 11V7a5 5 0 0 1 10 0v4"
+              />
+
+            </svg>
+
+            <span>
+              Masuk
+            </span>
+
+          </button>
+
+        </form>
+
+
+        <!-- =================================================
+             OR
+             ================================================= -->
+        <div class="login-divider-or">
+
+          <span>
+            atau
+          </span>
+
+        </div>
+
+
+        <!-- =================================================
+             ACCOUNT LOGIN
+             ================================================= -->
+        <button
+          type="button"
+          class="account-button"
+          onclick="return false;"
+        >
+
+          <svg
+            width="19"
+            height="19"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+
+            <circle
+              cx="9"
+              cy="7"
+              r="4"
+            />
+
+            <path
+              d="M2 21a7 7 0 0 1 14 0"
+            />
+
+            <path
+              d="M16 11a4 4 0 0 1 6 3.5"
+            />
+
+            <path
+              d="M17 21a5 5 0 0 1 5-5"
+            />
+
+          </svg>
+
+          <span>
+            Masuk dengan Akun
+          </span>
+
+        </button>
+
+
+        <!-- =================================================
+             FOOTER
+             ================================================= -->
+        <div class="login-footer">
+
+          <span>
+            🛡
+          </span>
+
+          <span>
+            Internal System
+          </span>
+
+          <b>
+            •
+          </b>
+
+          <span>
+            Keep Data, Keep Trust
+          </span>
+
+        </div>
+
+
+        <!-- =================================================
+             CLOCK
+             ================================================= -->
+        <div class="login-clock">
+
+          <div
+            id="currentDate"
+            class="current-date"
+          >
+            Memuat tanggal...
+          </div>
+
+          <div
+            id="currentTime"
+            class="current-time"
+          >
+            Memuat waktu...
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+</main>
+
+
+<script>
+
+/* =========================================================
+   PASSWORD TOGGLE
+   ========================================================= */
+
+const passwordInput =
+  document.getElementById('password')
+
+const passwordToggle =
+  document.getElementById('passwordToggle')
+
+const eyeIcon =
+  document.getElementById('eyeIcon')
+
+
+if (passwordInput && passwordToggle) {
+
+  passwordToggle.addEventListener('click', () => {
+
+    const isPassword =
+      passwordInput.type === 'password'
+
+    passwordInput.type =
+      isPassword ? 'text' : 'password'
+
+
+    passwordToggle.setAttribute(
+      'aria-label',
+      isPassword
+        ? 'Sembunyikan password'
+        : 'Tampilkan password'
+    )
+
+
+    if (eyeIcon) {
+
+      if (isPassword) {
+
+        eyeIcon.innerHTML = `
+          <path
+            d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"
+          />
+          <circle
+            cx="12"
+            cy="12"
+            r="3"
+          />
+        `
+
+      } else {
+
+        eyeIcon.innerHTML = `
+          <path
+            d="M3 3l18 18"
+          />
+
+          <path
+            d="M10.6 10.6a2 2 0 0 0 2.8 2.8"
+          />
+
+          <path
+            d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.5 0 10 7 10 7a18.4 18.4 0 0 1-3.1 4.2"
+          />
+
+          <path
+            d="M6.1 6.1C3.5 8.1 2 12 2 12s3.5 7 10 7c1.4 0 2.7-.3 3.8-.8"
+          />
+        `
+
+      }
+
+    }
+
+  })
+
+}
+
+
+/* =========================================================
+   LOGIN BUTTON
+   ========================================================= */
+
+const loginForm =
+  document.querySelector('.login-form')
+
+const loginButton =
+  document.getElementById('loginButton')
+
+
+if (loginForm && loginButton) {
+
+  loginForm.addEventListener('submit', () => {
+
+    loginButton.disabled = true
+
+    loginButton.style.opacity = '0.75'
+
+    const span =
+      loginButton.querySelector('span')
+
+    if (span) {
+
+      span.textContent =
+        'Memproses...'
+
+    }
+
+  })
+
+}
+
+
+/* =========================================================
+   REALTIME DATE + TIME
+   WIB / ASIA JAKARTA
+   ========================================================= */
+
+const dateElement =
+  document.getElementById('currentDate')
+
+const timeElement =
+  document.getElementById('currentTime')
+
+
+function updateClock() {
+
+  const now =
+    new Date()
+
+
+  const dateFormatter =
+    new Intl.DateTimeFormat(
+      'id-ID',
+      {
+        weekday: 'long',
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'Asia/Jakarta'
+      }
+    )
+
+
+  const timeFormatter =
+    new Intl.DateTimeFormat(
+      'id-ID',
+      {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+        timeZone: 'Asia/Jakarta'
+      }
+    )
+
+
+  if (dateElement) {
+
+    dateElement.textContent =
+      dateFormatter.format(now)
+
+  }
+
+
+  if (timeElement) {
+
+    timeElement.textContent =
+      timeFormatter.format(now) + ' WIB'
+
+  }
+
+}
+
+
+updateClock()
+
+setInterval(
+  updateClock,
+  1000
+)
+
+</script>
+
+</body>
+</html>
