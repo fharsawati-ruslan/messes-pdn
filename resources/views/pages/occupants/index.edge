@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MESS KSO | Penghuni</title>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: #f4f7fb;
+      color: #172033;
+    }
+
+    .layout { min-height: 100vh; display: flex; }
+
+    .sidebar {
+      width: 260px;
+      background: #082d60;
+      color: white;
+      padding: 28px 18px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 12px 28px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: white;
+      color: #082d60;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+
+    .brand h1 { font-size: 19px; }
+    .brand span {
+      display: block;
+      margin-top: 3px;
+      font-size: 11px;
+      opacity: .65;
+    }
+
+    .menu { margin-top: 28px; }
+
+    .menu-title {
+      padding: 0 12px;
+      margin: 22px 0 9px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      opacity: .45;
+    }
+
+    .menu a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      margin-bottom: 5px;
+      border-radius: 10px;
+      color: rgba(255,255,255,.78);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: rgba(255,255,255,.12);
+      color: white;
+    }
+
+    .sidebar-bottom { margin-top: auto; }
+
+    .main {
+      margin-left: 260px;
+      width: calc(100% - 260px);
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 76px;
+      background: white;
+      border-bottom: 1px solid #e8edf4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 34px;
+    }
+
+    .page-title h2 { font-size: 20px; }
+    .page-title p {
+      margin-top: 4px;
+      color: #8791a5;
+      font-size: 13px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #e8f0fb;
+      color: #082d60;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+    }
+
+    .profile-name { font-size: 13px; font-weight: 700; }
+    .profile-role {
+      font-size: 11px;
+      color: #16845b;
+      margin-top: 3px;
+    }
+
+    .content { padding: 34px; }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      gap: 20px;
+    }
+
+    .page-header h1 {
+      font-size: 25px;
+      color: #102f67;
+    }
+
+    .page-header p {
+      margin-top: 5px;
+      color: #8791a5;
+      font-size: 13px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      border: 0;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .btn-primary {
+      background: #082d60;
+      color: white;
+    }
+
+    .btn-primary:hover { background: #0b4b96; }
+
+    .panel {
+      background: white;
+      border: 1px solid #e8edf4;
+      border-radius: 16px;
+      padding: 22px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .search {
+      display: flex;
+      gap: 8px;
+      flex: 1;
+      max-width: 520px;
+    }
+
+    .search input {
+      flex: 1;
+      border: 1px solid #dce3ed;
+      border-radius: 10px;
+      padding: 11px 13px;
+      outline: none;
+      font-size: 13px;
+    }
+
+    .search input:focus {
+      border-color: #5a8dcc;
+      box-shadow: 0 0 0 3px rgba(90,141,204,.12);
+    }
+
+    .btn-search {
+      background: #eaf1fb;
+      color: #082d60;
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    th {
+      text-align: left;
+      padding: 13px 12px;
+      background: #f7f9fc;
+      color: #68758c;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    td {
+      padding: 13px 12px;
+      border-bottom: 1px solid #edf1f6;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    tbody tr:hover { background: #fafcff; }
+
+    .person {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .person-photo {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #e8f0fb;
+    }
+
+    .person-placeholder {
+      display: grid;
+      place-items: center;
+      color: #082d60;
+      font-weight: 800;
+    }
+
+    .person-name {
+      font-weight: 700;
+      color: #172033;
+    }
+
+    .muted {
+      margin-top: 3px;
+      color: #8b95a8;
+      font-size: 11px;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .badge-active {
+      background: #e8f7ef;
+      color: #16845b;
+    }
+
+    .badge-inactive {
+      background: #f1f3f6;
+      color: #68758c;
+    }
+
+    .actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .action {
+      padding: 7px 9px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .action-view {
+      background: #eaf1fb;
+      color: #174ea6;
+    }
+
+    .action-edit {
+      background: #fff5df;
+      color: #9a6800;
+    }
+
+    .action-delete {
+      background: #fff0f1;
+      color: #c6283d;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 50px 20px;
+      color: #8791a5;
+    }
+
+    .flash {
+      margin-bottom: 18px;
+      padding: 12px 15px;
+      border-radius: 10px;
+      background: #e8f7ef;
+      color: #14744f;
+      border: 1px solid #c8ead8;
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar { width: 220px; }
+      .main {
+        margin-left: 220px;
+        width: calc(100% - 220px);
+      }
+
+      .content { padding: 22px; }
+      .page-header { align-items: flex-start; flex-direction: column; }
+    }
+
+    @media (max-width: 700px) {
+      .sidebar { display: none; }
+      .main {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .topbar { padding: 0 20px; }
+      .content { padding: 18px; }
+      .toolbar { align-items: stretch; flex-direction: column; }
+      .search { max-width: none; }
+      .profile-role { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">KSO</div>
+        <div>
+          <h1>MESS KSO</h1>
+          <span>Management System</span>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <div class="menu-title">MENU UTAMA</div>
+
+        <a href="/dashboard">
+          <span>▦</span>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="/occupants" class="active">
+          <span>♙</span>
+          <span>Penghuni</span>
+        </a>
+
+        <a href="/houses">
+          <span>⌂</span>
+          <span>Rumah Mess</span>
+        </a>
+
+        <div class="menu-title">KSO</div>
+
+        <a href="#">
+          <span>▣</span>
+          <span>Request KSO</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <form method="POST" action="/logout">
+          {{ csrfField() }}
+          <button
+            type="submit"
+            style="width:100%;background:transparent;border:0;color:rgba(255,255,255,.78);padding:12px;text-align:left;cursor:pointer;font-size:14px;"
+          >
+            ⇥ &nbsp; Keluar
+          </button>
+        </form>
+      </div>
+    </aside>
+
+    <main class="main">
+
+      <header class="topbar">
+        <div class="page-title">
+          <h2>Penghuni</h2>
+          <p>Master Data / Penghuni</p>
+        </div>
+
+        <div class="profile">
+          <div class="avatar">
+            {{ (auth.user?.fullName || 'A').charAt(0).toUpperCase() }}
+          </div>
+
+          <div>
+            <div class="profile-name">
+              {{ auth.user?.fullName || 'Administrator' }}
+            </div>
+            <div class="profile-role">
+              {{ auth.user?.role || 'super_admin' }}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="content">
+
+        <div class="page-header">
+          <div>
+            <h1>Daftar Penghuni</h1>
+            <p>Kelola data penghuni yang menempati rumah mess.</p>
+          </div>
+
+          <a href="/occupants/create" class="btn btn-primary">
+            + Tambah Penghuni
+          </a>
+        </div>
+
+        @if (flashMessages.get('success'))
+          <div class="flash">
+            {{ flashMessages.get('success') }}
+          </div>
+        @endif
+
+        <div class="panel">
+
+          <div class="toolbar">
+            <form method="GET" action="/occupants" class="search">
+              <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                placeholder="Cari nama, NIK, atau nomor telepon..."
+              >
+
+              <button type="submit" class="btn btn-search">
+                Cari
+              </button>
+            </form>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Penghuni</th>
+                  <th>Jabatan</th>
+                  <th>Rumah</th>
+                  <th>Kamar</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @if (occupants.length === 0)
+
+                  <tr>
+                    <td colspan="6">
+                      <div class="empty">
+                        Belum ada data penghuni.
+                      </div>
+                    </td>
+                  </tr>
+
+                @else
+
+                  @each (occupant in occupants)
+
+                    <tr>
+                      <td>
+                        <div class="person">
+
+                          @if (occupant.photo)
+                            <img
+                              src="{{ occupant.photo }}"
+                              alt="{{ occupant.name }}"
+                              class="person-photo"
+                            >
+                          @else
+                            <div class="person-photo person-placeholder">
+                              {{ occupant.name.charAt(0).toUpperCase() }}
+                            </div>
+                          @endif
+
+                          <div>
+                            <div class="person-name">
+                              {{ occupant.name }}
+                            </div>
+
+                            @if (occupant.nik)
+                              <div class="muted">
+                                NIK: {{ occupant.nik }}
+                              </div>
+                            @endif
+                          </div>
+
+                        </div>
+                      </td>
+
+                      <td>
+                        {{ occupant.position?.name || '-' }}
+                      </td>
+
+                      <td>
+                        {{ occupant.house?.name || '-' }}
+                      </td>
+
+                      <td>
+                        {{ occupant.roomNumber || '-' }}
+                      </td>
+
+                      <td>
+                        @if (occupant.status === 'active')
+                          <span class="badge badge-active">Aktif</span>
+                        @else
+                          <span class="badge badge-inactive">
+                            {{ occupant.status }}
+                          </span>
+                        @endif
+                      </td>
+
+                      <td>
+                        <div class="actions">
+
+                          <a
+                            href="/occupants/{{ occupant.id }}"
+                            class="action action-view"
+                          >
+                            Detail
+                          </a>
+
+                          <a
+                            href="/occupants/{{ occupant.id }}/edit"
+                            class="action action-edit"
+                          >
+                            Edit
+                          </a>
+
+                          <form
+                            method="POST"
+                            action="/occupants/{{ occupant.id }}/delete"
+                            onsubmit="return confirm('Hapus data penghuni ini?')"
+                          >
+                            {{ csrfField() }}
+
+                            <button
+                              type="submit"
+                              class="action action-delete"
+                            >
+                              Hapus
+                            </button>
+                          </form>
+
+                        </div>
+                      </td>
+                    </tr>
+
+                  @endeach
+
+                @endif
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </section>
+    </main>
+
+  </div>
+</body>
+</html>

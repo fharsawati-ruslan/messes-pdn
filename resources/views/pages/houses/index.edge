@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rumah Mess | MESS KSO</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: #f4f7fb;
+      color: #172033;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 35px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .title h1 {
+      color: #082d60;
+      font-size: 26px;
+    }
+
+    .title p {
+      margin-top: 6px;
+      color: #8791a5;
+      font-size: 13px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 11px 18px;
+      border-radius: 9px;
+      background: #082d60;
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .alert {
+      margin-bottom: 20px;
+      padding: 13px 16px;
+      border-radius: 9px;
+      background: #e7f8ef;
+      border: 1px solid #b9e8cd;
+      color: #16734b;
+      font-size: 13px;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid #e5eaf1;
+      border-radius: 16px;
+      padding: 22px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      padding: 13px 12px;
+      text-align: left;
+      background: #f7f9fc;
+      color: #6f7d94;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    td {
+      padding: 15px 12px;
+      border-top: 1px solid #edf0f5;
+      font-size: 13px;
+    }
+
+    .code {
+      font-weight: 700;
+      color: #082d60;
+    }
+
+    .name {
+      font-weight: 700;
+    }
+
+    .muted {
+      color: #8791a5;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .active {
+      background: #e8f7ef;
+      color: #16845b;
+    }
+
+    .inactive {
+      background: #f1f3f6;
+      color: #7a8494;
+    }
+
+    .actions {
+      display: flex;
+      gap: 7px;
+    }
+
+    .action {
+      padding: 7px 10px;
+      border-radius: 7px;
+      border: 1px solid #dce3ed;
+      font-size: 11px;
+      font-weight: 700;
+      background: white;
+    }
+
+    .action.view {
+      color: #082d60;
+    }
+
+    .action.edit {
+      color: #2563eb;
+    }
+
+    .action.delete {
+      color: #dc2626;
+    }
+
+    .empty {
+      padding: 45px;
+      text-align: center;
+      color: #8791a5;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="header">
+
+    <div class="title">
+      <h1>Rumah Mess</h1>
+      <p>Kelola data rumah mess MESS KSO.</p>
+    </div>
+
+    <a href="/houses/create" class="btn">
+      + Tambah Rumah Mess
+    </a>
+
+  </div>
+
+
+  @if (flashMessages.get('success'))
+    <div class="alert">
+      {{ flashMessages.get('success') }}
+    </div>
+  @endif
+
+
+  <div class="panel">
+
+    @if (houses.length)
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Kode</th>
+            <th>Nama Rumah</th>
+            <th>Alamat</th>
+            <th>Kapasitas</th>
+            <th>Penghuni</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @each (house in houses)
+
+            <tr>
+
+              <td>
+                <span class="code">
+                  {{ house.code }}
+                </span>
+              </td>
+
+              <td>
+                <div class="name">
+                  {{ house.name }}
+                </div>
+              </td>
+
+              <td>
+                <span class="muted">
+                  {{ house.address || '-' }}
+                </span>
+              </td>
+
+              <td>
+                {{ house.capacity }}
+              </td>
+
+              <td>
+                {{ house.$extras.occupants_count || 0 }}
+              </td>
+
+              <td>
+
+                @if (house.isActive)
+                  <span class="badge active">
+                    Aktif
+                  </span>
+                @else
+                  <span class="badge inactive">
+                    Tidak Aktif
+                  </span>
+                @endif
+
+              </td>
+
+              <td>
+
+                <div class="actions">
+
+                  <a
+                    href="/houses/{{ house.id }}"
+                    class="action view"
+                  >
+                    Detail
+                  </a>
+
+                  <a
+                    href="/houses/{{ house.id }}/edit"
+                    class="action edit"
+                  >
+                    Edit
+                  </a>
+
+                  <form
+                    method="POST"
+                    action="/houses/{{ house.id }}/delete"
+                    onsubmit="return confirm('Hapus rumah mess ini?')"
+                  >
+                    <button
+                      type="submit"
+                      class="action delete"
+                    >
+                      Hapus
+                    </button>
+                  </form>
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          @endeach
+
+        </tbody>
+
+      </table>
+
+    @else
+
+      <div class="empty">
+
+        <h3>Belum ada rumah mess</h3>
+
+        <p style="margin-top:8px;">
+          Tambahkan rumah mess pertama untuk mulai mengelola data.
+        </p>
+
+        <a
+          href="/houses/create"
+          class="btn"
+          style="margin-top:18px;"
+        >
+          + Tambah Rumah Mess
+        </a>
+
+      </div>
+
+    @endif
+
+  </div>
+
+</div>
+
+</body>
+</html>

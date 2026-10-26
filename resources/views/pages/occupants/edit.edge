@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MESS KSO | Edit Penghuni</title>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: #f4f7fb;
+      color: #172033;
+    }
+
+    .layout { min-height: 100vh; display: flex; }
+
+    .sidebar {
+      width: 260px;
+      background: #082d60;
+      color: white;
+      padding: 28px 18px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 12px 28px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: white;
+      color: #082d60;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+
+    .brand h1 { font-size: 19px; }
+
+    .brand span {
+      display: block;
+      margin-top: 3px;
+      font-size: 11px;
+      opacity: .65;
+    }
+
+    .menu { margin-top: 28px; }
+
+    .menu-title {
+      padding: 0 12px;
+      margin: 22px 0 9px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      opacity: .45;
+    }
+
+    .menu a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      margin-bottom: 5px;
+      border-radius: 10px;
+      color: rgba(255,255,255,.78);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: rgba(255,255,255,.12);
+      color: white;
+    }
+
+    .sidebar-bottom { margin-top: auto; }
+
+    .main {
+      margin-left: 260px;
+      width: calc(100% - 260px);
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 76px;
+      background: white;
+      border-bottom: 1px solid #e8edf4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 34px;
+    }
+
+    .page-title h2 { font-size: 20px; }
+
+    .page-title p {
+      margin-top: 4px;
+      color: #8791a5;
+      font-size: 13px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #e8f0fb;
+      color: #082d60;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+    }
+
+    .profile-name {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .profile-role {
+      font-size: 11px;
+      color: #16845b;
+      margin-top: 3px;
+    }
+
+    .content { padding: 34px; }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .page-header h1 {
+      font-size: 25px;
+      color: #102f67;
+    }
+
+    .page-header p {
+      margin-top: 5px;
+      color: #8791a5;
+      font-size: 13px;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid #e8edf4;
+      border-radius: 16px;
+      padding: 28px;
+      max-width: 1000px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #526078;
+    }
+
+    .required { color: #c6283d; }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #dce3ed;
+      border-radius: 10px;
+      padding: 11px 13px;
+      font-family: inherit;
+      font-size: 13px;
+      color: #172033;
+      background: white;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #5a8dcc;
+      box-shadow: 0 0 0 3px rgba(90,141,204,.12);
+    }
+
+    .photo-box {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 16px;
+      border: 1px dashed #ccd7e5;
+      border-radius: 12px;
+      background: #f9fbfd;
+    }
+
+    .photo-preview {
+      width: 82px;
+      height: 82px;
+      flex: 0 0 82px;
+      border-radius: 50%;
+      background: #e8f0fb;
+      color: #082d60;
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      font-weight: 800;
+      overflow: hidden;
+    }
+
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-info {
+      color: #8791a5;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .photo-info strong {
+      display: block;
+      color: #526078;
+      font-size: 12px;
+      margin-bottom: 3px;
+    }
+
+    .photo-input {
+      margin-top: 8px;
+      padding: 0;
+      border: 0;
+      box-shadow: none !important;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid #edf1f6;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 17px;
+      border-radius: 10px;
+      text-decoration: none;
+      border: 0;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .btn-primary {
+      background: #082d60;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #0b4b96;
+    }
+
+    .btn-secondary {
+      background: #eef2f7;
+      color: #526078;
+    }
+
+    .current-photo {
+      margin-top: 5px;
+      color: #8791a5;
+      font-size: 11px;
+    }
+
+    @media (max-width: 700px) {
+      .sidebar { display: none; }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .topbar { padding: 0 20px; }
+      .content { padding: 18px; }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: auto;
+      }
+
+      .profile-role { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">KSO</div>
+
+        <div>
+          <h1>MESS KSO</h1>
+          <span>Management System</span>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <div class="menu-title">MENU UTAMA</div>
+
+        <a href="/dashboard">
+          <span>▦</span>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="/occupants" class="active">
+          <span>♙</span>
+          <span>Penghuni</span>
+        </a>
+
+        <a href="/houses">
+          <span>⌂</span>
+          <span>Rumah Mess</span>
+        </a>
+
+        <div class="menu-title">KSO</div>
+
+        <a href="#">
+          <span>▣</span>
+          <span>Request KSO</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <form method="POST" action="/logout">
+          {{ csrfField() }}
+
+          <button
+            type="submit"
+            style="width:100%;background:transparent;border:0;color:rgba(255,255,255,.78);padding:12px;text-align:left;cursor:pointer;font-size:14px;"
+          >
+            ⇥ &nbsp; Keluar
+          </button>
+        </form>
+      </div>
+    </aside>
+
+    <main class="main">
+
+      <header class="topbar">
+        <div class="page-title">
+          <h2>Penghuni</h2>
+          <p>Master Data / Penghuni / Edit</p>
+        </div>
+
+        <div class="profile">
+          <div class="avatar">
+            {{ (auth.user?.fullName || 'A').charAt(0).toUpperCase() }}
+          </div>
+
+          <div>
+            <div class="profile-name">
+              {{ auth.user?.fullName || 'Administrator' }}
+            </div>
+
+            <div class="profile-role">
+              {{ auth.user?.role || 'super_admin' }}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="content">
+
+        <div class="page-header">
+          <div>
+            <h1>Edit Penghuni</h1>
+            <p>Perbarui informasi penghuni yang tersimpan di MESS KSO.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+
+          <form
+            method="POST"
+            action="/occupants/{{ occupant.id }}"
+            enctype="multipart/form-data"
+          >
+            {{ csrfField() }}
+
+            <div class="form-grid">
+
+              <div class="form-group full">
+                <label>Foto Profil</label>
+
+                <div class="photo-box">
+
+                  <div class="photo-preview" id="photoPreview">
+                    @if (occupant.photo)
+                      <img
+                        src="{{ occupant.photo }}"
+                        alt="{{ occupant.name }}"
+                      >
+                    @else
+                      {{ occupant.name.charAt(0).toUpperCase() }}
+                    @endif
+                  </div>
+
+                  <div class="photo-info">
+                    <strong>Foto penghuni</strong>
+                    JPG, JPEG, PNG atau WebP. Maksimal 2 MB.
+
+                    <input
+                      class="photo-input"
+                      type="file"
+                      name="photo"
+                      accept=".jpg,.jpeg,.png,.webp,image/*"
+                      onchange="previewPhoto(event)"
+                    >
+
+                    @if (occupant.photo)
+                      <div class="current-photo">
+                        Foto saat ini sudah tersimpan.
+                      </div>
+                    @endif
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>
+                  Nama Lengkap <span class="required">*</span>
+                </label>
+
+                <input
+                  type="text"
+                  name="name"
+                  value="{{ occupant.name }}"
+                  required
+                  maxlength="150"
+                  placeholder="Masukkan nama lengkap"
+                >
+              </div>
+
+              <div class="form-group">
+                <label>NIK</label>
+
+                <input
+                  type="text"
+                  name="nik"
+                  value="{{ occupant.nik || '' }}"
+                  maxlength="30"
+                  placeholder="Nomor Induk Kependudukan"
+                >
+              </div>
+
+              <div class="form-group">
+                <label>Nomor HP</label>
+
+                <input
+                  type="text"
+                  name="phone"
+                  value="{{ occupant.phone || '' }}"
+                  maxlength="30"
+                  placeholder="08xxxxxxxxxx"
+                >
+              </div>
+
+              <div class="form-group">
+                <label>Tempat Kerja</label>
+
+                <input
+                  type="text"
+                  name="workplace"
+                  value="{{ occupant.workplace || '' }}"
+                  maxlength="150"
+                  placeholder="Nama instansi / tempat kerja"
+                >
+              </div>
+
+              <div class="form-group">
+                <label>Jabatan</label>
+
+                <select name="positionId">
+
+                  <option value="">-- Pilih Jabatan --</option>
+
+                  @each (position in positions)
+
+                    <option
+                      value="{{ position.id }}"
+                      {{ occupant.positionId === position.id ? 'selected' : '' }}
+                    >
+                      {{ position.name }}
+                    </option>
+
+                  @endeach
+
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Rumah Mess</label>
+
+                <select name="houseId">
+
+                  <option value="">-- Pilih Rumah Mess --</option>
+
+                  @each (house in houses)
+
+                    <option
+                      value="{{ house.id }}"
+                      {{ occupant.houseId === house.id ? 'selected' : '' }}
+                    >
+                      {{ house.name }} ({{ house.code }})
+                    </option>
+
+                  @endeach
+
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Nomor Kamar</label>
+
+                <input
+                  type="text"
+                  name="roomNumber"
+                  value="{{ occupant.roomNumber || '' }}"
+                  maxlength="30"
+                  placeholder="Contoh: A-01"
+                >
+              </div>
+
+              <div class="form-group">
+                <label>Status</label>
+
+                <select name="status">
+
+                  <option
+                    value="active"
+                    {{ occupant.status === 'active' ? 'selected' : '' }}
+                  >
+                    Aktif
+                  </option>
+
+                  <option
+                    value="inactive"
+                    {{ occupant.status === 'inactive' ? 'selected' : '' }}
+                  >
+                    Tidak Aktif
+                  </option>
+
+                  <option
+                    value="moved"
+                    {{ occupant.status === 'moved' ? 'selected' : '' }}
+                  >
+                    Pindah
+                  </option>
+
+                </select>
+              </div>
+
+              <div class="form-group full">
+                <label>Keterangan</label>
+
+                <textarea
+                  name="description"
+                  placeholder="Keterangan tambahan penghuni..."
+                >{{ occupant.description || '' }}</textarea>
+              </div>
+
+            </div>
+
+            <div class="form-actions">
+
+              <a
+                href="/occupants"
+                class="btn btn-secondary"
+              >
+                Batal
+              </a>
+
+              <button
+                type="submit"
+                class="btn btn-primary"
+              >
+                Simpan Perubahan
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </section>
+    </main>
+
+  </div>
+
+  <script>
+    function previewPhoto(event) {
+      const file = event.target.files[0]
+      const preview = document.getElementById('photoPreview')
+
+      if (!file) {
+        return
+      }
+
+      const reader = new FileReader()
+
+      reader.onload = function (e) {
+        preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`
+      }
+
+      reader.readAsDataURL(file)
+    }
+  </script>
+</body>
+</html>

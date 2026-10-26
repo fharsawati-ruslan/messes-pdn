@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>{{ house.name }} - Rumah Mess</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f7fb;
+      color: #102a43;
+    }
+
+    .layout {
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 255px;
+      background: #0b376d;
+      color: white;
+      padding: 28px 18px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 10px 24px;
+      border-bottom: 1px solid rgba(255,255,255,.15);
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: white;
+      color: #0b376d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .brand span {
+      display: block;
+      margin-top: 3px;
+      font-size: 11px;
+      opacity: .65;
+    }
+
+    .menu {
+      margin-top: 28px;
+    }
+
+    .menu-title {
+      padding: 0 12px;
+      margin: 22px 0 9px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      opacity: .45;
+    }
+
+    .menu a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      margin-bottom: 5px;
+      border-radius: 10px;
+      color: rgba(255,255,255,.78);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: rgba(255,255,255,.12);
+      color: white;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+    }
+
+    .logout {
+      width: 100%;
+      border: 0;
+      cursor: pointer;
+      text-align: left;
+      background: white;
+      color: #0b376d;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+    }
+
+    .logout:hover {
+      background: #f0fdf4;
+      color: #15803d;
+    }
+
+    /* MAIN */
+    .main {
+      margin-left: 255px;
+      width: calc(100% - 255px);
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 76px;
+      background: white;
+      border-bottom: 1px solid #e5eaf0;
+      display: flex;
+      align-items: center;
+      padding: 0 34px;
+    }
+
+    .page-title h2 {
+      margin: 0;
+      font-size: 21px;
+      color: #102a43;
+    }
+
+    .page-title p {
+      margin: 5px 0 0;
+      color: #7b8794;
+      font-size: 13px;
+    }
+
+    .content {
+      padding: 34px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+      color: #0b376d;
+    }
+
+    .header p {
+      margin: 7px 0 0;
+      color: #7b8794;
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 17px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      border: 0;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #34495e;
+      border: 1px solid #d8e0ea;
+    }
+
+    .btn-primary {
+      background: #0b376d;
+      color: white;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid #e3eaf2;
+      border-radius: 14px;
+      padding: 25px;
+      margin-bottom: 22px;
+    }
+
+    .panel-title {
+      margin: 0 0 20px;
+      font-size: 17px;
+      color: #102a43;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .info-item {
+      border-bottom: 1px solid #edf1f5;
+      padding-bottom: 14px;
+    }
+
+    .info-label {
+      font-size: 11px;
+      color: #8291a5;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 6px;
+    }
+
+    .info-value {
+      font-size: 14px;
+      color: #102a43;
+      font-weight: 600;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .status-active {
+      background: #e8f8f1;
+      color: #087f5b;
+    }
+
+    .status-inactive {
+      background: #f1f3f5;
+      color: #6c757d;
+    }
+
+    .description {
+      margin-top: 22px;
+      padding-top: 20px;
+      border-top: 1px solid #edf1f5;
+    }
+
+    .description-text {
+      color: #52606d;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .occupant-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .occupant {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid #edf1f5;
+    }
+
+    .occupant:last-child {
+      border-bottom: 0;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: #e8f0fa;
+      color: #0b5cad;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .occupant-info {
+      flex: 1;
+    }
+
+    .occupant-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #102a43;
+    }
+
+    .occupant-meta {
+      margin-top: 4px;
+      color: #8291a5;
+      font-size: 12px;
+    }
+
+    .empty {
+      padding: 30px 10px;
+      text-align: center;
+      color: #8291a5;
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        width: 220px;
+      }
+
+      .main {
+        margin-left: 220px;
+        width: calc(100% - 220px);
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+  <aside class="sidebar">
+
+    <div class="brand">
+      <div class="brand-logo">KSO</div>
+
+      <div>
+        <h1>MESS KSO</h1>
+        <span>Management System</span>
+      </div>
+    </div>
+
+    <nav class="menu">
+
+      <div class="menu-title">MENU UTAMA</div>
+
+      <a href="/dashboard">
+        <span>▦</span>
+        <span>Dashboard</span>
+      </a>
+
+      <div class="menu-title">MASTER DATA</div>
+
+      <a href="/occupants">
+        <span>♟</span>
+        <span>Penghuni</span>
+      </a>
+
+      <a href="/houses" class="active">
+        <span>⌂</span>
+        <span>Rumah Mess</span>
+      </a>
+
+      <div class="menu-title">KSO</div>
+
+      <a href="#">
+        <span>▣</span>
+        <span>Request KSO</span>
+      </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+      <form method="POST" action="/logout">
+        {{ csrfField() }}
+
+        <button type="submit" class="logout">
+          ⇥ &nbsp; Keluar
+        </button>
+      </form>
+
+    </div>
+
+  </aside>
+
+
+  <main class="main">
+
+    <header class="topbar">
+      <div class="page-title">
+        <h2>Rumah Mess</h2>
+        <p>Master Data / Rumah Mess / Detail</p>
+      </div>
+    </header>
+
+
+    <section class="content">
+
+      <div class="header">
+
+        <div>
+          <h1>{{ house.name }}</h1>
+
+          <p>
+            Detail informasi rumah mess
+            · {{ house.code }}
+          </p>
+        </div>
+
+        <div class="actions">
+
+          <a href="/houses" class="btn btn-secondary">
+            ← Kembali
+          </a>
+
+          <a href="/houses/{{ house.id }}/edit" class="btn btn-primary">
+            Edit Rumah
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <h3 class="panel-title">
+          Informasi Rumah
+        </h3>
+
+        <div class="info-grid">
+
+          <div class="info-item">
+            <div class="info-label">Kode Rumah</div>
+            <div class="info-value">
+              {{ house.code }}
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-label">Nama Rumah</div>
+            <div class="info-value">
+              {{ house.name }}
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-label">Alamat</div>
+            <div class="info-value">
+              {{ house.address || '-' }}
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-label">Kapasitas</div>
+            <div class="info-value">
+              {{ house.capacity }} orang
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-label">PIC</div>
+            <div class="info-value">
+              {{ house.picName || '-' }}
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-label">Nomor Telepon PIC</div>
+            <div class="info-value">
+              {{ house.picPhone || '-' }}
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-label">Status</div>
+
+            <div class="info-value">
+
+              @if(house.isActive)
+                <span class="status status-active">
+                  AKTIF
+                </span>
+              @else
+                <span class="status status-inactive">
+                  TIDAK AKTIF
+                </span>
+              @endif
+
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-label">Jumlah Penghuni</div>
+
+            <div class="info-value">
+              {{ house.occupantsCount || 0 }} orang
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="description">
+
+          <div class="info-label">
+            Keterangan
+          </div>
+
+          <div class="description-text">
+            {{ house.description || 'Tidak ada keterangan.' }}
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <h3 class="panel-title">
+          Daftar Penghuni
+        </h3>
+
+        @if(house.occupants.length)
+
+          <div class="occupant-list">
+
+            @each(occupant in house.occupants)
+
+              <div class="occupant">
+
+                <div class="avatar">
+                  {{ occupant.name.charAt(0).toUpperCase() }}
+                </div>
+
+                <div class="occupant-info">
+
+                  <div class="occupant-name">
+                    {{ occupant.name }}
+                  </div>
+
+                  <div class="occupant-meta">
+                    {{ occupant.roomNumber || 'Kamar belum diatur' }}
+
+                    @if(occupant.position)
+                      · {{ occupant.position.name }}
+                    @endif
+                  </div>
+
+                </div>
+
+                @if(occupant.status === 'active')
+                  <span class="status status-active">
+                    AKTIF
+                  </span>
+                @else
+                  <span class="status status-inactive">
+                    TIDAK AKTIF
+                  </span>
+                @endif
+
+              </div>
+
+            @endeach
+
+          </div>
+
+        @else
+
+          <div class="empty">
+            Belum ada penghuni yang ditempatkan di rumah ini.
+          </div>
+
+        @endif
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+</body>
+</html>

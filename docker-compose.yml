@@ -4,6 +4,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - ./build:/app/build
     container_name: mess-kso
     restart: unless-stopped
     env_file:
@@ -27,6 +30,7 @@ services:
 
   postgres:
     image: postgres:16-alpine
+
     container_name: mess-kso-postgres
     restart: unless-stopped
     environment:

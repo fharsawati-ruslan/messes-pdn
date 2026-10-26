@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# Pastikan devDependencies ikut terinstall
 RUN npm ci --include=dev
 
 COPY . .
@@ -19,4 +18,7 @@ ENV PORT=3333
 
 EXPOSE 3333
 
-CMD ["node", "build/bin/server.js"]
+# Jalankan aplikasi dari hasil build
+WORKDIR /app/build
+
+CMD ["node", "bin/server.js"]
