@@ -33,3 +33,19 @@ yarn-error.log
 # Backup / temporary source files
 *.bak
 *.broken
+.env.*
+!.env.example
+node_modules/
+.next/
+vendor/
+*.sql
+*.sql.gz
+*.dump
+*.backup*
+*.before-*
+backups/
+.cache/
+.npm/
+mysql,
+*.pem
+*.key
